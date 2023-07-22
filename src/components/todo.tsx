@@ -27,5 +27,11 @@ export default function TodoControl({ todo, setTodo }: { todo: Todo, setTodo: (t
             })
         }} />
 
+        <div>
+        
+        </div>
+
+        
+
     </div>
 }

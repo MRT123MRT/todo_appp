@@ -11,13 +11,28 @@ export default function App() {
   //use state tells React that this variable is used during render and should be watched for changes (to rerender things)
   const [todos, setTodos] = useState<Todo[]>([])
 
+
+  const[currentTime, setCurrentTime] = useState(Date.now())
+ // UPDATE TIME IN STATE
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+
+
   //runs once when the component shown on the screen
   useEffect(() => {
 
     //read data from localstorage
     const data = localStorage.getItem('todos')
 
-    console.log(data);
+    console.log(data);  
 
     //if data exists, convert it to an array and set it to todos
     if (data) {

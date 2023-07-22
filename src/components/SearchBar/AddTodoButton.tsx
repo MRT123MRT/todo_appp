@@ -1,7 +1,10 @@
 
 import { useState } from 'react'
 import Todo from '../../models/Todo'
+import { DatePicker } from "antd";
 
+
+    
 export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
 
     const [showModal, setShowModal] = useState(false)
@@ -139,6 +142,8 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                         </button>
 
                     </div>
+
+                        <DatePicker />
 
                 </div>
             }

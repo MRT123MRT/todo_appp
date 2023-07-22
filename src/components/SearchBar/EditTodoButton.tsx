@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import Todo from '../../models/Todo'
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+
 
 export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) => void, todo: Todo }) {
-
+    const [startDate, setStartDate] = useState<Date | null>(new Date());
     const [showModal, setShowModal] = useState(false)
     const [_todo, setTodo] = useState<Todo>(todo)
 
@@ -118,12 +122,23 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                                 padding: "8px 14px",
                             }}
                         >
-                            Save                      </button>
+                            Save
+                        </button>
 
+
+                        <DatePicker
+                            timeIntervals={5}
+                            showTimeSelect
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            dateFormat="MM-dd-yyyy, HH:mm"
+                            timeFormat='HH:mm'
+                        />
                     </div>
-
                 </div>
             }
         </>
+
     )
+
 }
