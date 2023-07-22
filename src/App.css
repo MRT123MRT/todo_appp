@@ -36,3 +36,36 @@
     transform: rotate(360deg);
   }
 }
+
+
+.container{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 100px 0px;
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  background-color: #eee;
+}
+
+.todoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  margin: 10px 10px;
+  border-radius: 7px;
+  padding: 10px 20px;
+  height: fit-content;
+  border: 1px solid #ccc;
+}
+
+.nameContent {
+
+  width: 100%;
+}
