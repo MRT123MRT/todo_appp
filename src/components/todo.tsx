@@ -8,7 +8,7 @@ export default function TodoControl({ todo, setTodo }: { todo: Todo, setTodo: (t
         <EditTodoButton todo={todo} updateTodo={setTodo} />
 
         <div className="nameContent">
-            <h3>{todo.title}</h3>
+            <h3>{todo.title}</h3> 
 
             <p style={{
                 whiteSpace: 'pre-wrap',
