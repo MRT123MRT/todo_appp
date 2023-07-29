@@ -5,6 +5,7 @@ import Todo from "./models/Todo"
 import SearchFilter from "./models/SearchFilter"
 
 import './App.css'
+import { DateTime } from "luxon"
 
 export default function App() {
 
@@ -12,11 +13,11 @@ export default function App() {
   const [todos, setTodos] = useState<Todo[]>([])
 
 
-  const[currentTime, setCurrentTime] = useState(Date.now())
+  const[currentTime, setCurrentTime] = useState(DateTime.now())
  // UPDATE TIME IN STATE
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(Date.now())
+      setCurrentTime(DateTime.now())
     }, 1000);
 
     return () => {
@@ -108,10 +109,21 @@ export default function App() {
             else
               return true
           }).sort((a, b) => (a.completed ? 1 : 0) - (b.completed ? 1 : 0)).map((t, i) => {
-            return <TodoControl key={i} todo={t} setTodo={(todo) => {
+            return <TodoControl key={i} todo={t} currentTime={currentTime} setTodo={(todo) => {
+              if(todo!==null)
+              {
               const newTodos = [...todos]
-              newTodos[parseInt(todo.id)] = todo
+              newTodos[newTodos.findIndex(s => s.id === todo.id)] = todo
               setTodos(newTodos)
+              }
+              else
+              {
+                const newTodos = [...todos]
+                newTodos.splice(newTodos.findIndex(s => s.id === t.id), 1)
+                setTodos(newTodos)
+              }
+              
+
             }} />
           }) :
             <div

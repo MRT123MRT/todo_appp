@@ -3,10 +3,13 @@ import Todo from '../../models/Todo'
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { DateTime } from 'luxon';
 
 
 export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) => void, todo: Todo }) {
+
     const [startDate, setStartDate] = useState<Date | null>(new Date());
+
     const [showModal, setShowModal] = useState(false)
     const [_todo, setTodo] = useState<Todo>(todo)
 
@@ -18,7 +21,7 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
             <button
                 onClick={() => setShowModal(true)}
                 style={{
-                    backgroundColor: 'white',
+                    backgroundColor: '#00000000',
                     cursor: 'pointer',
                     color: 'white',
                     border: 'none',
@@ -35,7 +38,7 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                 <div
                     onClick={() => setShowModal(false)}
                     style={{
-                        position: 'absolute',
+                        position: 'fixed',
                         top: 0,
                         left: 0,
                         width: '100vw',
@@ -126,14 +129,44 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                         </button>
 
 
-                        <DatePicker
-                            timeIntervals={5}
-                            showTimeSelect
-                            selected={startDate}
-                            onChange={(date) => setStartDate(date)}
-                            dateFormat="MM-dd-yyyy, HH:mm"
-                            timeFormat='HH:mm'
-                        />
+                        <div>
+
+
+                            <DatePicker
+                                timeIntervals={5}
+                                showTimeSelect
+                                disabled={_todo.dueDate == null}
+                                selected={DateTime.fromISO(_todo?.dueDate?.toString() || new Date().toISOString()).toJSDate()}
+                                onChange={(date) => setTodo({
+                                    ..._todo,
+                                    dueDate: DateTime.fromJSDate(date as Date)
+                                })}
+                                dateFormat="MM-dd-yyyy, HH:mm"
+                                timeFormat='HH:mm'
+                            />
+
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+
+
+                                <input type="checkbox" style={{
+                                    width: 30,
+                                    height: 30,
+                                }} checked={_todo.dueDate !== null} onChange={(e) => {
+                                    setTodo({
+                                        ..._todo,
+                                        dueDate: _todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
+                                    })
+                                }} />
+
+                                Due date {_todo.dueDate == null ? 'disabled' : 'enabled'}
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             }

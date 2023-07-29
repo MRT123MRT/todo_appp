@@ -1,5 +1,5 @@
 import AdvancedSearchOptions from "./AdvancedSearchOptions"
-import { AddTodoButton } from "./AddTodoButton"
+import { AddTodoButton } from "../buttons/AddTodoButton"
 import SearchFilter from "../../models/SearchFilter"
 import Todo from "../../models/Todo"
 

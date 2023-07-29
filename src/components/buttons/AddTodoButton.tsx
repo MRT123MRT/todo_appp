@@ -1,19 +1,21 @@
 
 import { useState } from 'react'
 import Todo from '../../models/Todo'
-import { DatePicker } from "antd";
+import DatePicker from "react-datepicker";
+import { v4 } from 'uuid';
+
+import "react-datepicker/dist/react-datepicker.css";
+import { DateTime } from 'luxon';
 
 
-    
 export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
-
     const [showModal, setShowModal] = useState(false)
     const [todo, setTodo] = useState<Todo>({
         title: "",
         content: "",
         completed: false,
-        createdAt: new Date(),
-        id: "",
+        id: v4(),
+        dueDate: DateTime.fromJSDate(new Date())
     } as Todo)
 
     const [titleError, setTitleError] = useState(false)
@@ -42,7 +44,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                 <div
                     onClick={() => setShowModal(false)}
                     style={{
-                        position: 'absolute',
+                        position: 'fixed',
                         top: 0,
                         left: 0,
                         width: '100vw',
@@ -123,7 +125,8 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                         content: "",
                                         completed: false,
                                         createdAt: new Date(),
-                                        id: "",
+                                        id: v4(),
+                                        dueDate: DateTime.fromJSDate(new Date()),
                                     } as Todo
                                 )
                             }}
@@ -141,9 +144,49 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                             Add todo
                         </button>
 
+                        <div>
+
+
+                            <DatePicker
+                                timeIntervals={5}
+                                showTimeSelect
+                                disabled={todo.dueDate == null}
+                                selected={DateTime.fromISO(todo?.dueDate?.toString() || new Date().toISOString()).toJSDate()}
+                                onChange={(date) => setTodo({
+                                    ...todo,
+                                    dueDate: DateTime.fromJSDate(date as Date)
+                                })}
+                                dateFormat="MM-dd-yyyy, HH:mm"
+                                timeFormat='HH:mm'
+                            />
+
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+
+
+                                <input type="checkbox" style={{
+                                    width: 30,
+                                    height: 30,
+                                }} checked={todo.dueDate == null} onChange={(e) => {
+                                    setTodo({
+                                        ...todo,
+                                        dueDate: todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
+                                    })
+                                }} />
+
+                                Due date {todo.dueDate == null ? 'disabled' : 'enabled'}
+
+                            </div>
+
+                        </div>
                     </div>
 
-                        <DatePicker />
+
+
+
 
                 </div>
             }
