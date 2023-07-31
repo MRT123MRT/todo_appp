@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
+import Login from './components/login';
+import Register from './components/register';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
@@ -18,8 +19,8 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/products" element={<>PRODUCTS</>} />
-        <Route path="/about" element={<>HELLO YOUR COMPUTER HAS VIRUS</>} />
+        <Route path="/login" element={<Login></Login>} />
+        <Route path="/register" element={<Register></Register>} />
       </Routes>
     </BrowserRouter>
 

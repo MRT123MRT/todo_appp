@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import SearchBar from "./components/SearchBar/SearchBar"
 import TodoControl from "./components/todo"
-import Todo from "./models/Todo"
+import DTOTodo from "./models/TypeTodo"
 import SearchFilter from "./models/SearchFilter"
+import { convertToDBTodo, convertToDTOTodo } from "./models/TypeTodo"
 
 import './App.css'
 import { DateTime } from "luxon"
@@ -10,11 +11,11 @@ import { DateTime } from "luxon"
 export default function App() {
 
   //use state tells React that this variable is used during render and should be watched for changes (to rerender things)
-  const [todos, setTodos] = useState<Todo[]>([])
+  const [todos, setTodos] = useState<DTOTodo[]>([])
 
 
-  const[currentTime, setCurrentTime] = useState(DateTime.now())
- // UPDATE TIME IN STATE
+  const [currentTime, setCurrentTime] = useState(DateTime.now())
+  // UPDATE TIME IN STATE
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(DateTime.now())
@@ -26,30 +27,38 @@ export default function App() {
   }, []);
 
 
-
-  //runs once when the component shown on the screen
   useEffect(() => {
 
-    //read data from localstorage
-    const data = localStorage.getItem('todos')
-
-    console.log(data);  
-
-    //if data exists, convert it to an array and set it to todos
-    if (data) {
-      setTodos(JSON.parse(data))
-      console.log(JSON.parse(data))
-    }
-
-  }, []) // [] means run once !! no array means run every time the component is shown on the screen (multiple times per second usually so be careful)
 
 
-  //runs when todos changes
-  useEffect(() => {
-    //save todos to localstorage
-    if (todos.length > 0)
-      localStorage.setItem('todos', JSON.stringify(todos))
-  }, [todos]) // [todos] means run when tehre is any change to 'todos' state
+    fetch('http://localhost:5000/fetchTodos', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    }).then(async res => {
+
+      if (res.status === 200) {
+
+        const json = await res.json();
+        console.log(json)
+        setTodos(json.map((a: any) => convertToDTOTodo(a)))
+
+      }
+      else {
+        setTodos([]);
+
+      }
+
+
+    }).catch(err => {
+      console.log(err);
+
+    })
+
+
+  }, [])
 
 
   const [filter, setFilter] = useState<SearchFilter>({
@@ -64,12 +73,34 @@ export default function App() {
         My todo list
       </h1>
 
-      <SearchBar filter={filter} setFilter={setFilter} addTodo={(todo) => {
+      <SearchBar filter={filter} setFilter={setFilter} addTodo={async (todo) => {
+        fetch('http://localhost:5000/addTodo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*"
+          },
+          credentials: 'include',
+          body: JSON.stringify({ todo: convertToDBTodo(todo) })
 
-        todo.id = todos.length.toString();
+        }).then(async res => {
 
-        setTodos([...todos, todo])
+          if (res.status >= 200 && res.status < 300) {
 
+            const json = await res.json()
+            console.log(json, convertToDTOTodo(json))
+
+            setTodos([...todos, convertToDTOTodo(json)])
+          }
+          else {
+            console.log(await res.json())
+            alert('something went wrong')
+          }
+        }).catch(err => {
+          console.log(err);
+          alert('we have some problems with server')
+
+        })
       }} />
 
       <div style={{
@@ -110,19 +141,21 @@ export default function App() {
               return true
           }).sort((a, b) => (a.completed ? 1 : 0) - (b.completed ? 1 : 0)).map((t, i) => {
             return <TodoControl key={i} todo={t} currentTime={currentTime} setTodo={(todo) => {
-              if(todo!==null)
-              {
-              const newTodos = [...todos]
-              newTodos[newTodos.findIndex(s => s.id === todo.id)] = todo
-              setTodos(newTodos)
+              if (todo !== null) {
+
+                //fetch (/updateTodo)
+
+                const newTodos = [...todos]
+                newTodos[newTodos.findIndex(s => s.id === todo.id)] = todo
+                setTodos(newTodos)
               }
-              else
-              {
+              else {
+
                 const newTodos = [...todos]
                 newTodos.splice(newTodos.findIndex(s => s.id === t.id), 1)
                 setTodos(newTodos)
               }
-              
+
 
             }} />
           }) :

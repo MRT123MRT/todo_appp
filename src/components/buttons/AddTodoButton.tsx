@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import Todo from '../../models/Todo'
+import DTOTodo from '../../models/TypeTodo'
 import DatePicker from "react-datepicker";
 import { v4 } from 'uuid';
 
@@ -8,19 +8,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import { DateTime } from 'luxon';
 
 
-export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
+export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void }) {
     const [showModal, setShowModal] = useState(false)
-    const [todo, setTodo] = useState<Todo>({
+    const [todo, setTodo] = useState<DTOTodo>({
         title: "",
         content: "",
         completed: false,
         id: v4(),
         dueDate: DateTime.fromJSDate(new Date())
-    } as Todo)
+    } as DTOTodo)
 
     const [titleError, setTitleError] = useState(false)
     const [contentError, setContentError] = useState(false)
-
+    
     return (
         <>
             <button
@@ -41,8 +41,9 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
             {
                 showModal &&
 
-                <div
+                <div    
                     onClick={() => setShowModal(false)}
+                    
                     style={{
                         position: 'fixed',
                         top: 0,
@@ -50,6 +51,8 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                         width: '100vw',
                         height: '100vh',
                         backgroundColor: 'rgba(0,0,0,0.5)',
+                        padding: '20px',
+                        zIndex: 1000000000,
                     }}>
 
                     <div
@@ -66,6 +69,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'space-between',
+                            
                         }}>
 
                         <input
@@ -85,6 +89,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                 width: '100%',
                                 boxSizing: 'border-box',
                                 margin: "0px 20px",
+                                
                             }}
                         />
 
@@ -104,7 +109,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                 padding: "12px 18px",
                                 width: '100%',
                                 boxSizing: 'border-box',
-                                margin: "0px 20px",
+                                margin: "0px 200px",
                                 height: 280,
                             }}
                         />
@@ -127,7 +132,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                         createdAt: new Date(),
                                         id: v4(),
                                         dueDate: DateTime.fromJSDate(new Date()),
-                                    } as Todo
+                                    } as DTOTodo
                                 )
                             }}
                             style={{
@@ -164,12 +169,14 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                padding: 'auto',
                             }}>
 
 
                                 <input type="checkbox" style={{
                                     width: 30,
                                     height: 30,
+                                    padding: '20px',
                                 }} checked={todo.dueDate == null} onChange={(e) => {
                                     setTodo({
                                         ...todo,
@@ -177,7 +184,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: Todo) => void }) {
                                     })
                                 }} />
 
-                                Due date {todo.dueDate == null ? 'disabled' : 'enabled'}
+                                {todo.dueDate == null ? 'not' : ''} relevant
 
                             </div>
 

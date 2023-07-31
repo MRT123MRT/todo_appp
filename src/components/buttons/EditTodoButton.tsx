@@ -1,17 +1,17 @@
 import { useState } from 'react'
-import Todo from '../../models/Todo'
+import DTOTodo from '../../models/TypeTodo'
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { DateTime } from 'luxon';
 
 
-export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) => void, todo: Todo }) {
+export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: DTOTodo) => void, todo: DTOTodo }) {
 
     const [startDate, setStartDate] = useState<Date | null>(new Date());
 
     const [showModal, setShowModal] = useState(false)
-    const [_todo, setTodo] = useState<Todo>(todo)
+    const [_todo, setTodo] = useState<DTOTodo>(todo)
 
     const [titleError, setTitleError] = useState(false)
     const [contentError, setContentError] = useState(false)
@@ -28,29 +28,32 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                     borderRadius: 10,
                     padding: "0px",
                     margin: "0px 10px",
+
                 }}>
-                <img alt="add icon" src="/edit-2.svg" width={25} height={25} />
+                <img alt="edit icon" src="/edit-2.svg" width={25} height={25} />
             </button>
 
             {
                 showModal &&
 
                 <div
-                    onClick={() => setShowModal(false)}
+                    onClick={(e) => { setShowModal(false); e.stopPropagation(); }}
                     style={{
+                        opacity: "100%",
                         position: 'fixed',
                         top: 0,
                         left: 0,
                         width: '100vw',
                         height: '100vh',
                         backgroundColor: 'rgba(0,0,0,0.5)',
+                        zIndex: 5000,
                     }}>
 
                     <div
                         onClick={(e) => e.stopPropagation()}
                         style={{
-                            width: 400,
-                            height: 400,
+                            width: 'fit-content',
+                            height: 'fit-content',
                             backgroundColor: 'white',
                             borderRadius: 10,
                             margin: 'auto',
@@ -60,9 +63,17 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'space-between',
+                            zIndex: 100,
                         }}>
 
-                        <input
+                        <div style={{
+                            backgroundColor: 'red',
+                            width: 30,  
+                            height: 30,
+
+                        }} />
+
+                        {/* <input
                             onFocus={() => setTitleError(false)}
                             onChange={(e) => setTodo({
                                 ..._todo,
@@ -77,8 +88,8 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                                 outline: 'none',
                                 padding: "12px 18px",
                                 width: '100%',
-                                boxSizing: 'border-box',
-                                margin: "0px 20px",
+                                margin: "20px 20px",
+                                flexShrink: 0,
                             }}
                         />
 
@@ -97,8 +108,8 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                                 outline: 'none',
                                 padding: "12px 18px",
                                 width: '100%',
-                                boxSizing: 'border-box',
-                                margin: "0px 20px",
+                                margin: "20px 20px",
+                                flexShrink: 0,
                                 height: 280,
                             }}
                         />
@@ -123,6 +134,7 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                                 fontSize: "1.2rem",
                                 fontWeight: 500,
                                 padding: "8px 14px",
+                                margin: "0px 10px",
                             }}
                         >
                             Save
@@ -162,11 +174,12 @@ export function EditTodoButton({ updateTodo, todo }: { updateTodo: (todo: Todo) 
                                     })
                                 }} />
 
-                                Due date {_todo.dueDate == null ? 'disabled' : 'enabled'}
+
+                                {_todo.dueDate == null ? 'not' : ''} relevant
 
                             </div>
 
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             }

@@ -1,9 +1,9 @@
 import AdvancedSearchOptions from "./AdvancedSearchOptions"
 import { AddTodoButton } from "../buttons/AddTodoButton"
 import SearchFilter from "../../models/SearchFilter"
-import Todo from "../../models/Todo"
+import DTOTodo from "../../models/TypeTodo"
 
-export default function SearchBar({ filter, setFilter, addTodo }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void, addTodo: (todo: Todo) => void }) {
+export default function SearchBar({ filter, setFilter, addTodo }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void, addTodo: (todo: DTOTodo) => void }) {
 
   return <>
     <div style={{
