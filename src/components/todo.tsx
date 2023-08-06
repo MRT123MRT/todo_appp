@@ -11,7 +11,7 @@ import zIndex from '@mui/material/styles/zIndex';
 import { convertToDBTodo, convertToDTOTodo } from '../models/TypeTodo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { deleteTodoFetch,updateTodoFetch } from '../fetches/todosFetches';
 
 export default function TodoControl({ todo, setTodo, currentTime }: { currentTime: DateTime, todo: DTOTodo, setTodo: (todo: DTOTodo | null) => void }) {
 
@@ -60,7 +60,6 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                 {todo?.dueDate && DateTime.fromISO(todo?.dueDate?.toString()).toFormat('dd/MM/yyyy HH:mm')}
 
             </div>
-
             <input type="checkbox"
                 //disabled={todo.dueDate == null}
                 style={{
@@ -99,40 +98,9 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
 
                     })
                 }} />
-
-
-
-
-
             <DeleteButton deleteTodo={async () => {
-                fetch('http://localhost:5000/deleteTodo', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Access-Control-Allow-Origin": "*"
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ todoid: todo.id })
-
-                }).then(async res => {
-
-                    if (res.status >= 200 && res.status < 300) {
-
-                        setTodo(null)
-                        toast('todo deleted')
-                    }
-                    else {
-                        console.log(await res.json())
-                        toast('something went wrong')
-                    }
-                }).catch(err => {
-                    console.log(err);
-                    toast('we have some problems with server')
-
-                })
+                deleteTodoFetch(todo, setTodo)
             }} />
-
-
 
         </div>
         <ToastContainer />
@@ -217,49 +185,11 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                             setTitleError(_todo.title.length < 1)
                             setContentError(_todo.content.length < 1)
                             if (_todo.title.length * _todo.content.length < 1) return;
-
-
-
-
                             const newTodo = {
                                 ..._todo,
-
                             }
-
-
                             console.log(newTodo)
-
-                            fetch('http://localhost:5000/updateTodo', {
-                                method: 'PUT',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    "Access-Control-Allow-Origin": "*"
-                                },
-                                credentials: 'include',
-                                body: JSON.stringify({ todo: convertToDBTodo(newTodo) })
-
-                            }).then(async res => {
-
-                                if (res.status >= 200 && res.status < 300) {
-                                    setTodo(convertToDTOTodo(await res.json()))
-                                    setShowModal(false);
-                                    toast('todo updated')
-                                }
-                                else {
-                                    console.log(await res.json())
-                                    toast('something went wrong')
-                                }
-                            }).catch(err => {
-                                console.log(err);
-                                toast('we have some problems with server')
-
-                            })
-
-
-
-
-
-
+                            updateTodoFetch(newTodo, setTodo,setShowModal)
                         }}
                         style={{
                             backgroundColor: 'white',

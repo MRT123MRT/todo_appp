@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -7,8 +7,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { Interval } from 'luxon';
-
+import { registerFetch } from '../fetches/userFetches';
 const Register = () => {
+
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -18,6 +19,22 @@ const Register = () => {
 
     const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
     const btnstyle = { margin: '8px 0' }
+
+    const ifAllFeildsAreFilled = () => {
+
+        
+        if (username === '' || password === '' || email === '') {
+            toast("please fill all fields");
+            return false;
+        }   
+        else if((/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm).test(email) === false){
+                
+                toast("email is not valid");
+                return false;
+        }
+    
+        return true;
+    }
 
     return (
         <Grid className="container">
@@ -56,52 +73,13 @@ const Register = () => {
                     placeholder='Enter password'
                     fullWidth required />
 
-                <Button type='submit' color='primary' variant="contained" style={btnstyle} onClick={async () => {
-
-                        if((/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm).test(email) === null){
-
-                            toast("email is not valid");
-                            return;
-                        }
-
-
-
-                    fetch('http://localhost:5000/register', {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            username,
-                            password, 
-                            email
-                        })
-                    }).then(async res => {
-
-                        if (res.status >= 200 && res.status < 300) {
-                            toast("all good");
-                            
-                            window.location.href = "/login"
-                            
-                        }
-                        else {
-                            console.log(await res.json())
-                            toast("we have some problems with server");
-                        }
-
-
-                    }).catch(err => {
-                        console.log(err);
-                        toast("we have some problems with server");
-                    })
-
-
-
-
-
-                }} fullWidth>register</Button>
+                <Button 
+                type='submit' 
+                color='primary' 
+                variant="contained" 
+                style={btnstyle} 
+                onClick={() => registerFetch(username, password, email)}
+                fullWidth>register</Button>
 
             <ToastContainer />
             </Paper>

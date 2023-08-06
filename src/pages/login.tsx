@@ -6,7 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 //@ts-ignore
 import cookie from 'react-cookies'
 import { ToastContainer, toast } from 'react-toastify';
-
+import { loginFetch } from '../fetches/userFetches';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
@@ -16,9 +16,10 @@ const Login = () => {
     const [rememberMe, setRememberMe] = useState(false)
     const [error, setError] = useState(false);
 
-    const timeout = (ms: number) => {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+
+
+
+
 
     const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
     const avatarStyle = { backgroundColor: '#1bbd7e', margin: "20px auto" }
@@ -60,53 +61,16 @@ const Login = () => {
                     }
                     label="Remember me"
                 />
-                <Button type='submit' color='primary' variant="contained" style={btnstyle} onClick={async () => {
-
-
-
-
-                    fetch('http://localhost:5000/login', {
-                        method: 'POST',
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Access-Control-Allow-Origin": "*"
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            username,
-                            password
-                        })
-                    }).then(async res => {
-
-                        if (res.ok) {
-                            let data = await res.json()
-                            cookie.save('token', data.token, { // FUNCTION IN A NOTHER PLACE
-                                path: '/',
-                                expires: rememberMe ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 365) : null
-                                
-                            })
-
-                            toast("you are logged in");
-                            timeout(50000)
-                            window.location.href = "/"
-                        }
-                        else {
-                            toast("username or password is incorrect");
-                        }
-
-
-                    }).catch(err => {
-                        console.log(err);
-                        toast("we have some problems with server");
-
-                    })
-
-
-
-
-
-                }} fullWidth>Sign in</Button>
+                <Button
+                    type='submit'
+                    color='primary'
+                    variant="contained"
+                    style={btnstyle}
+                    onClick={() => loginFetch(username, password, rememberMe)}
+                    fullWidth>Sign in</Button>
                 <ToastContainer />
+
+
                 <Typography justifyContent={'center'} >
                     <Button variant="text" size='small' onClick={() => window.location.href = "https://youtu.be/VOQYO7iGF3M"}>Forgot password ?</Button>
 

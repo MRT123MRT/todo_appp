@@ -2,8 +2,13 @@ import AdvancedSearchOptions from "./AdvancedSearchOptions"
 import { AddTodoButton } from "../buttons/AddTodoButton"
 import SearchFilter from "../../models/SearchFilter"
 import DTOTodo from "../../models/TypeTodo"
-
-export default function SearchBar({ filter, setFilter, addTodo }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void, addTodo: (todo: DTOTodo) => void }) {
+import LogoutButton from "../../components/buttons/logoutButton"
+import cookie from 'react-cookies'
+const logout = () => {
+  cookie.remove('token')
+  window.location.href = "/login"
+}
+export default function SearchBar({ filter, setFilter, addTodo }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void, addTodo: (todo: DTOTodo) => void, }) {
 
   return <>
     <div style={{
@@ -48,6 +53,7 @@ export default function SearchBar({ filter, setFilter, addTodo }: { filter: Sear
         }}
       />
       <AddTodoButton addTodo={addTodo} />
+      <LogoutButton logout={logout}></LogoutButton>
     </div>
 
     {

@@ -8,18 +8,23 @@ import cookie from 'react-cookies'
 // import App.css
 import '../App.css';
 import { DateTime } from "luxon"
+import { fetchTodos, addTodoFetch } from "../fetches/todosFetches"
 
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
+import LogoutButton from "../components/buttons/logoutButton"
+
+
 export default function App() {
 
-  //use state tells React that this variable is used during render and should be watched for changes (to rerender things)
+
   const [todos, setTodos] = useState<DTOTodo[]>([])
-  const notify = () => toast("Wow so easy !");
+
 
 
   const [currentTime, setCurrentTime] = useState(DateTime.now())
+
   // UPDATE TIME IN STATE
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,41 +37,7 @@ export default function App() {
   }, []);
 
 
-  useEffect(() => {
-
-
-    if (cookie.load('token') === null || cookie.load('token') === undefined) { // PUT THIS IN A FUNCTION
-      window.location.href = '/login'
-    }
-
-    fetch('http://localhost:5000/fetchTodos', { //MOVE ALL HTTP REQUESTS INTO DIFFRENT FILES
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      }
-    }).then(async res => {
-
-      if (res.status === 200) {
-        toast("task get from server successfully");
-        const json = await res.json();
-        console.log(json)
-        setTodos(json.map((a: any) => convertToDTOTodo(a)))
-
-      }
-      else {
-        setTodos([]);
-        toast("no task found");
-      }
-
-
-    }).catch(err => {
-      console.log(err);
-      toast("we have some problems with server");
-    })
-
-
-  }, [])
+  useEffect(() => { fetchTodos(setTodos, todos) }, [])
 
 
   const [filter, setFilter] = useState<SearchFilter>({
@@ -107,36 +78,7 @@ export default function App() {
       <h1>
         My todo list
       </h1>
-
-      <SearchBar filter={filter} setFilter={setFilter} addTodo={async (todo) => {
-        fetch('http://localhost:5000/addTodo', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": "*"
-          },
-          credentials: 'include',
-          body: JSON.stringify({ todo: convertToDBTodo(todo) })
-
-        }).then(async res => {
-
-          if (res.status >= 200 && res.status < 300) {
-
-            const json = await res.json()
-            console.log(json, convertToDTOTodo(json))
-            toast("todo added")
-            setTodos([...todos, convertToDTOTodo(json)])
-          }
-          else {
-            console.log(await res.json())
-            toast("something went wrong")
-          }
-        }).catch(err => {
-          console.log(err);
-          toast("we have some problems")
-
-        })
-      }} />
+      <SearchBar filter={filter} setFilter={setFilter} addTodo={(todo: DTOTodo) => addTodoFetch(todo, setTodos, todos)} />
       <ToastContainer />
       <div style={{
         width: "90%",
