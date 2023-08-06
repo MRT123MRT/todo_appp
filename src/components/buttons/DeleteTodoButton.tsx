@@ -14,7 +14,7 @@ function DeleteButton({ deleteTodo }: { deleteTodo: () => void, }) {
                 padding: "0px",
                 margin: "0px 10px",
             }}
-            onClick={deleteTodo}>
+            onClick={()=> deleteTodo()}>
             <img alt="add icon" src="/trash-2.svg" width={25} height={25} />
         </button>
 

@@ -13,7 +13,7 @@ export default DTOTodo;
 
 type DBTodo = {
     todoid: string;
-    todotitle: string;
+    todotitle: string; //FRONT DOSNT NEED TO KNOW ABOUT DATABASE TYPES
     tododescription: string;
     todoisdone: boolean;
     duedate: string | null;
@@ -31,7 +31,7 @@ export const convertToDTOTodo = (dbTodo: DBTodo): DTOTodo => {
     }
 }
 
-export const convertToDBTodo = (dtoTodo: DTOTodo): DBTodo => {
+export const convertToDBTodo = (dtoTodo: DTOTodo): DBTodo => { // THIS CONVERSION NEEDS TO ONLY HAPPEN IN BACKEND
 
     return {
         todoid: dtoTodo.id,

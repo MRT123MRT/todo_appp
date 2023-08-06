@@ -15,7 +15,10 @@ export default function AdvancedSearchOptions({ filter, setFilter }: { filter: S
   
   }
   
-  function FilterByCompletionSettings({ filter, setFilter }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void }) {
+type Props = { filter: SearchFilter, setFilter: (filter: SearchFilter) => void }
+
+
+const FilterByCompletionSettings: React.FC<Props> = ({ filter, setFilter }) => { // TRANSFORM ALL YOUR REACT COMPONENTS TO LOOK LIKE THIS AND USE TYPES LIKE THIS
   
     return <div style={{
       display: 'flex',

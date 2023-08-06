@@ -5,6 +5,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 //@ts-ignore
 import cookie from 'react-cookies'
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
@@ -12,6 +15,10 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false)
     const [error, setError] = useState(false);
+
+    const timeout = (ms: number) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     const paperStyle = { padding: 20, height: '70vh', width: 280, margin: "20px auto" }
     const avatarStyle = { backgroundColor: '#1bbd7e', margin: "20px auto" }
@@ -72,23 +79,25 @@ const Login = () => {
                     }).then(async res => {
 
                         if (res.ok) {
-                            console.log("vse zaebisi")
                             let data = await res.json()
-                            cookie.save('token', data.token, {
+                            cookie.save('token', data.token, { // FUNCTION IN A NOTHER PLACE
                                 path: '/',
                                 expires: rememberMe ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 365) : null
+                                
                             })
 
-                            window.location.href = "http://localhost:3000"
+                            toast("you are logged in");
+                            timeout(50000)
+                            window.location.href = "/"
                         }
                         else {
-                            alert('usernam or password is wrong')
+                            toast("username or password is incorrect");
                         }
 
 
                     }).catch(err => {
                         console.log(err);
-                        alert('we have some problems with server')
+                        toast("we have some problems with server");
 
                     })
 
@@ -97,12 +106,13 @@ const Login = () => {
 
 
                 }} fullWidth>Sign in</Button>
+                <ToastContainer />
                 <Typography justifyContent={'center'} >
                     <Button variant="text" size='small' onClick={() => window.location.href = "https://youtu.be/VOQYO7iGF3M"}>Forgot password ?</Button>
 
                 </Typography>
                 <Typography > Is it your first time here?
-                    <Button variant="text" size='small' onClick={() => window.location.href = "http://localhost:3000/register"}>Sign up</Button>
+                    <Button variant="text" size='small' onClick={() => window.location.href = "/register"}>Sign up</Button>
                 </Typography>
             </Paper>
         </Grid >

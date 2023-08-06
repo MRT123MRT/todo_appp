@@ -24,7 +24,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
     return (
         <>
             <button
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowModal(true)}  // USE EDIT MODAL COMPONENT FOR BOTH EDIT AND CREATE!!!!
                 style={{
                     backgroundColor: 'white',
                     cursor: 'pointer',
@@ -59,7 +59,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                         onClick={(e) => e.stopPropagation()}
                         style={{
                             width: 400,
-                            height: 400,
+                            height: 400,                            // MODAL
                             backgroundColor: 'white',
                             borderRadius: 10,
                             margin: 'auto',
@@ -109,7 +109,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                                 padding: "12px 18px",
                                 width: '100%',
                                 boxSizing: 'border-box',
-                                margin: "0px 200px",
+                                margin: "10px 200px",
                                 height: 280,
                             }}
                         />
@@ -144,12 +144,17 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                                 fontSize: "1.2rem",
                                 fontWeight: 500,
                                 padding: "8px 14px",
+                                margin: "10px 20px",
                             }}
                         >
                             Add todo
                         </button>
 
-                        <div>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
 
 
                             <DatePicker
@@ -174,9 +179,8 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
 
 
                                 <input type="checkbox" style={{
-                                    width: 30,
-                                    height: 30,
-                                    padding: '20px',
+                                    width: '1rem',
+                                    height: '1rem',
                                 }} checked={todo.dueDate == null} onChange={(e) => {
                                     setTodo({
                                         ...todo,

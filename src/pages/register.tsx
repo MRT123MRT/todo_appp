@@ -3,7 +3,10 @@ import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/m
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { ToastContainer, toast } from 'react-toastify';
 
+import 'react-toastify/dist/ReactToastify.css';
+import { Interval } from 'luxon';
 
 const Register = () => {
 
@@ -55,6 +58,11 @@ const Register = () => {
 
                 <Button type='submit' color='primary' variant="contained" style={btnstyle} onClick={async () => {
 
+                        if((/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm).test(email) === null){
+
+                            toast("email is not valid");
+                            return;
+                        }
 
 
 
@@ -73,21 +81,20 @@ const Register = () => {
                     }).then(async res => {
 
                         if (res.status >= 200 && res.status < 300) {
-                            console.log("vse zaebisi")
-                            alert('all good')
-                            window.location.href = "http://localhost:3000/login"
+                            toast("all good");
+                            
+                            window.location.href = "/login"
                             
                         }
                         else {
                             console.log(await res.json())
-                            alert('something went wrong')
+                            toast("we have some problems with server");
                         }
 
 
                     }).catch(err => {
                         console.log(err);
-                        alert('we have some problems with server')
-
+                        toast("we have some problems with server");
                     })
 
 
@@ -96,7 +103,7 @@ const Register = () => {
 
                 }} fullWidth>register</Button>
 
-
+            <ToastContainer />
             </Paper>
         </Grid >
     )
