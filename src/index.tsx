@@ -2,7 +2,7 @@ import React from 'react';
 //@ts-ignore
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './pages/App';
+import App from './pages/todos';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';

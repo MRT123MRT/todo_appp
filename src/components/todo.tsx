@@ -12,6 +12,14 @@ import { convertToDBTodo, convertToDTOTodo } from '../models/TypeTodo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { deleteTodoFetch,updateTodoFetch } from '../fetches/todosFetches';
+import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+//@ts-ignore
+import cookie from 'react-cookies'
+import { loginFetch } from '../fetches/userFetches';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function TodoControl({ todo, setTodo, currentTime }: { currentTime: DateTime, todo: DTOTodo, setTodo: (todo: DTOTodo | null) => void }) {
 
@@ -21,6 +29,7 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
 
     const [_todo, _setTodo] = useState<DTOTodo>(todo)
 
+    const btnstyle = { margin: '8px 0' }
     useEffect(() => {
         _setTodo(todo)
     }, [todo])
@@ -72,31 +81,7 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                         completed: e.target.checked
                     }
 
-                    fetch('http://localhost:5000/updateTodo', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "Access-Control-Allow-Origin": "*"
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify({ todo: convertToDBTodo(newTodo) })
-
-                    }).then(async res => {
-
-                        if (res.status >= 200 && res.status < 300) {
-
-                            setTodo(convertToDTOTodo(await res.json()))
-                            toast('todo marked')
-                        }
-                        else {
-                            console.log(await res.json())
-                            toast('something went wrong')
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                        toast('we have some problems with server')
-
-                    })
+                    updateTodoFetch(newTodo, setTodo,setShowModal)  
                 }} />
             <DeleteButton deleteTodo={async () => {
                 deleteTodoFetch(todo, setTodo)
@@ -138,7 +123,7 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                         zIndex: 100,
 
                     }}>
-
+                        <h3>Edit your Todo!</h3>
                     <input
                         onFocus={() => setTitleError(false)}
                         onChange={(e) => _setTodo({
@@ -179,41 +164,12 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                             height: 280,
                         }}
                     />
-
-                    <button
-                        onClick={() => {
-                            setTitleError(_todo.title.length < 1)
-                            setContentError(_todo.content.length < 1)
-                            if (_todo.title.length * _todo.content.length < 1) return;
-                            const newTodo = {
-                                ..._todo,
-                            }
-                            console.log(newTodo)
-                            updateTodoFetch(newTodo, setTodo,setShowModal)
-                        }}
-                        style={{
-                            backgroundColor: 'white',
-                            cursor: 'pointer',
-                            color: 'black',
-                            border: '1px solid #ccc',
-                            borderRadius: 7,
-                            fontSize: "1.2rem",
-                            fontWeight: 500,
-                            padding: "8px 14px",
-                            margin: "10px 20px",
-                        }}
-                    >
-                        Save
-                    </button>
-
-
+                <ToastContainer />
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}>
-
-
                         <DatePicker
                             timeIntervals={5}
                             showTimeSelect
@@ -226,24 +182,33 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
                             dateFormat="MM-dd-yyyy, HH:mm"
                             timeFormat='HH:mm'
                         />
-
-
-
-
                         <input type="checkbox" style={{
                             width: '1rem',
                             height: '1rem',
                         }} checked={_todo.dueDate !== null} onChange={(e) => {
                             _setTodo({
-                                ..._todo, // put this function outside
+                                ..._todo, 
                                 dueDate: _todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
                             })
                         }} />
-
-
-                        {_todo.dueDate == null ? 'not' : ''} relevant
-
                     </div>
+                    <Button
+                    type='submit'
+                    color='primary'
+                    variant="contained"
+                    style={btnstyle}
+                    onClick={() => {
+                        setTitleError(_todo.title.length < 1)
+                        setContentError(_todo.content.length < 1)
+                        if (_todo.title.length * _todo.content.length < 1) return;
+                        const newTodo = {
+                            ..._todo,
+                        }
+                        console.log(newTodo)
+                        updateTodoFetch(newTodo, setTodo,setShowModal)
+                    }}
+                    >Save</Button>
+                    Your task is {_todo.dueDate == null ? 'not' : ''} relevant
                 </div>
             </div>
         }

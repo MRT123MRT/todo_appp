@@ -82,6 +82,9 @@ const Register = () => {
                 fullWidth>register</Button>
 
             <ToastContainer />
+            <Typography > Login?
+                    <Button variant="text" size='small' onClick={() => window.location.href = "/login"}>Sign in</Button>
+                </Typography>
             </Paper>
         </Grid >
     )

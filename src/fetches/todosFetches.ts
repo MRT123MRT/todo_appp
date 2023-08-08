@@ -11,7 +11,7 @@ export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[
         window.location.href = '/login'
     }
 
-    fetch('http://localhost:5000/fetchTodos', { //MOVE ALL HTTP REQUESTS INTO DIFFRENT FILES
+    fetch('http://localhost:5000/todo', { //MOVE ALL HTTP REQUESTS INTO DIFFRENT FILES
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -39,7 +39,7 @@ export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[
 }
 
 export const addTodoFetch = async (todo: DTOTodo, setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[]) => {
-    fetch('http://localhost:5000/addTodo', {
+    fetch('http://localhost:5000/todo/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export const addTodoFetch = async (todo: DTOTodo, setTodos: (todos: DTOTodo[]) =
     })}
 export const deleteTodoFetch = async (todo: DTOTodo, setTodo: (todo: DTOTodo | null) => void) => {
 
-    fetch(`http://localhost:5000/deleteTodo/${todo.id}`, {
+    fetch(`http://localhost:5000/todo/${todo.id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export const updateTodoFetch = async (newTodo: {
     setShowModal: (showModal: boolean) => void
     
     ) => {
-    fetch('http://localhost:5000/updateTodo', {
+        fetch(`http://localhost:5000/todo/${newTodo.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -116,8 +116,8 @@ export const updateTodoFetch = async (newTodo: {
         body: JSON.stringify({ todo: convertToDBTodo(newTodo) })
 
     }).then(async res => {
-
-        if (res.status >= 200 && res.status < 300) {
+        console.log(newTodo.id)
+        if (res.status >= 200 && res.status < 350) {
             setTodo(convertToDTOTodo(await res.json()))
             setShowModal(false);
             toast('todo updated')

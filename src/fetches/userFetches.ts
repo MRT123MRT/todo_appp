@@ -46,7 +46,7 @@ export const loginFetch = async (username: string, password: string, rememberMe:
     }))
 
 
-    fetch('http://localhost:5000/login', {
+    fetch('http://localhost:5000/auth/login', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export const registerFetch = async (username: string, password: string, email: s
         return;
 
 
-    fetch('http://localhost:5000/register', {
+    fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",

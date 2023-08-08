@@ -7,7 +7,10 @@ import { v4 } from 'uuid';
 import "react-datepicker/dist/react-datepicker.css";
 import { DateTime } from 'luxon';
 
-
+import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void }) {
     const [showModal, setShowModal] = useState(false)
     const [todo, setTodo] = useState<DTOTodo>({
@@ -20,11 +23,11 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
 
     const [titleError, setTitleError] = useState(false)
     const [contentError, setContentError] = useState(false)
-    
+    const btnstyle = { margin: '8px 0' }
     return (
         <>
-            <button
-                onClick={() => setShowModal(true)}  // USE EDIT MODAL COMPONENT FOR BOTH EDIT AND CREATE!!!!
+            <button 
+                onClick={() => setShowModal(true)}
                 style={{
                     backgroundColor: 'white',
                     cursor: 'pointer',
@@ -34,32 +37,35 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                     padding: "8px 14px",
                     marginLeft: 10,
                     boxShadow: '0px 0px 5px #ccc',
-                }}>
+                }}
+                >
                 <img alt="add icon" src="/file-plus.svg" width={25} height={25} />
             </button>
 
             {
                 showModal &&
 
-                <div    
+                <div className="opacityBackground"
                     onClick={() => setShowModal(false)}
-                    
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        padding: '20px',
-                        zIndex: 1000000000,
-                    }}>
 
-                    <div
+                    // style={{
+                    //     position: 'fixed',
+                    //     top: 0,
+                    //     left: 0,
+                    //     width: '100vw',
+                    //     height: '100vh',
+                    //     backgroundColor: 'rgba(0,0,0,0.5)',
+                    //     padding: '20px',
+                    //     zIndex: 1000000000,
+                    // }}
+                    
+                    >
+
+                    <div 
                         onClick={(e) => e.stopPropagation()}
                         style={{
-                            width: 400,
-                            height: 400,                            // MODAL
+                            width: 'fit-content',
+                            height: 'fit-content',                          
                             backgroundColor: 'white',
                             borderRadius: 10,
                             margin: 'auto',
@@ -69,9 +75,11 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            
-                        }}>
 
+                        }}
+                        
+                        >
+                            <h3>Add a new Todo!</h3>
                         <input
                             onFocus={() => setTitleError(false)}
                             onChange={(e) => setTodo({
@@ -89,7 +97,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                                 width: '100%',
                                 boxSizing: 'border-box',
                                 margin: "0px 20px",
-                                
+
                             }}
                         />
 
@@ -113,43 +121,7 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                                 height: 280,
                             }}
                         />
-
-                        <button
-                            onClick={() => {
-
-                                setTitleError(todo.title.length < 1)
-                                setContentError(todo.content.length < 1)
-
-                                if (todo.title.length * todo.content.length < 1) return;
-
-                                addTodo(todo);
-                                setShowModal(false);
-                                setTodo(
-                                    {
-                                        title: "",
-                                        content: "",
-                                        completed: false,
-                                        createdAt: new Date(),
-                                        id: v4(),
-                                        dueDate: DateTime.fromJSDate(new Date()),
-                                    } as DTOTodo
-                                )
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                cursor: 'pointer',
-                                color: 'black',
-                                border: '1px solid #ccc',
-                                borderRadius: 7,
-                                fontSize: "1.2rem",
-                                fontWeight: 500,
-                                padding: "8px 14px",
-                                margin: "10px 20px",
-                            }}
-                        >
-                            Add todo
-                        </button>
-
+                    
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -178,21 +150,45 @@ export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void })
                             }}>
 
 
-                                <input type="checkbox" style={{
-                                    width: '1rem',
-                                    height: '1rem',
-                                }} checked={todo.dueDate == null} onChange={(e) => {
+                                <Checkbox
+                                size='medium'
+                                 checked={todo.dueDate == null} onChange={(e) => {
                                     setTodo({
                                         ...todo,
                                         dueDate: todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
                                     })
                                 }} />
-
-                                {todo.dueDate == null ? 'not' : ''} relevant
-
-                            </div>
-
+                            </div> 
+                            
                         </div>
+                        
+                        <Button
+                            type='submit'
+                            color='primary'
+                            variant="contained"
+                            style={btnstyle}
+                            onClick={() => {
+
+                                setTitleError(todo.title.length < 1)
+                                setContentError(todo.content.length < 1)
+
+                                if (todo.title.length * todo.content.length < 1) return;
+
+                                addTodo(todo);
+                                setShowModal(false);
+                                setTodo(
+                                    {
+                                        title: "",
+                                        content: "",
+                                        completed: false,
+                                        createdAt: new Date(),
+                                        id: v4(),
+                                        dueDate: DateTime.fromJSDate(new Date()),
+                                    } as DTOTodo
+                                )
+                            }}
+                        >Add todo</Button>
+                        Your task is {todo.dueDate == null ? 'not' : ''} relevant
                     </div>
 
 
