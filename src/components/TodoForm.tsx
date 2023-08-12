@@ -1,0 +1,140 @@
+
+import { useState } from 'react'
+import DTOTodo from '../models/TypeTodo'
+import DatePicker from "react-datepicker";
+import { v4 } from 'uuid';
+
+import "react-datepicker/dist/react-datepicker.css";
+import { DateTime } from 'luxon';
+import '../App.css' 
+import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
+export  default function TodoForm({ initial, submit, action,showModal, setShowModal }: { submit: (todo: DTOTodo) => void, initial?: DTOTodo, action: string, showModal: boolean, setShowModal: (showModal: boolean) => void }) {
+
+    const [todo, setTodo] = useState<DTOTodo>(initial ||{
+        title: "",
+        content: "",
+        completed: false,
+        id: v4(),
+        dueDate: DateTime.fromJSDate(new Date())
+    } as DTOTodo)
+
+    const [titleError, setTitleError] = useState(false)
+    const [contentError, setContentError] = useState(false)
+    const btnstyle = { margin: '8px 0' }
+    return (
+        <>
+
+                <div className="opacityBackground"
+                    onClick={() => setShowModal(false)}
+                    
+                    >
+
+                    <div className='modal'
+                        onClick={(e) => e.stopPropagation()}
+                        
+                        >
+                            <h3>Add a new Todo!</h3>
+                        <input className='titlearea'
+                            onFocus={() => setTitleError(false)}
+                            onChange={(e) => setTodo({
+                                ...todo,
+                                title: e.target.value
+                            })}
+                            value={todo.title}
+                            type="text" placeholder="Title"
+                        />
+
+                        <textarea
+                            className='contentarea'
+                            onFocus={() => setContentError(false)}
+                            onChange={(e) => setTodo({
+                                ...todo,
+                                content: e.target.value
+                            })}
+                            value={todo.content}
+                            placeholder="Description"
+                        />
+                    
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+
+
+                            <DatePicker
+                                timeIntervals={5}
+                                showTimeSelect
+                                disabled={todo.dueDate == null}
+                                selected={DateTime.fromISO(todo?.dueDate?.toString() || new Date().toISOString()).toJSDate()}
+                                onChange={(date) => setTodo({
+                                    ...todo,
+                                    dueDate: DateTime.fromJSDate(date as Date)
+                                })}
+                                dateFormat="MM-dd-yyyy, HH:mm"
+                                timeFormat='HH:mm'
+                            />
+
+                            <div style={{
+
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                
+                            }}>
+
+
+                                <Checkbox
+                                size='medium'
+                                 checked={todo.dueDate == null} onChange={(e) => {
+                                    setTodo({
+                                        ...todo,
+                                        dueDate: todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
+                                    })
+                                }} />
+                            </div> 
+                            
+                        </div>
+                        
+                        <Button
+                            type='submit'
+                            color='primary'
+                            variant="contained"
+                            style={btnstyle}
+                            onClick={() => {
+
+                                setTitleError(todo.title.length < 1)
+                                setContentError(todo.content.length < 1)
+
+                                if (todo.title.length * todo.content.length < 1) return;
+
+                                submit(todo);
+                                setShowModal(false);
+                                setTodo(
+                                    {
+                                        title: "",
+                                        content: "",
+                                        completed: false,
+                                        createdAt: new Date(),
+                                        id: v4(),
+                                        dueDate: DateTime.fromJSDate(new Date()),
+                                    } as DTOTodo
+                                )
+                            }}
+                        >{action}</Button>
+                        Your task is {todo.dueDate == null ? 'not' : ''} relevant
+                    </div>
+
+
+
+
+
+                </div>
+            
+        </>
+    )
+}

@@ -20,16 +20,15 @@ import Checkbox from '@mui/material/Checkbox';
 import cookie from 'react-cookies'
 import { loginFetch } from '../fetches/userFetches';
 import 'react-toastify/dist/ReactToastify.css';
-
+import TodoForm from './TodoForm';
 export default function TodoControl({ todo, setTodo, currentTime }: { currentTime: DateTime, todo: DTOTodo, setTodo: (todo: DTOTodo | null) => void }) {
 
     const [showModal, setShowModal] = useState(false);
-    const [titleError, setTitleError] = useState(false)
+
     const [contentError, setContentError] = useState(false)
 
     const [_todo, _setTodo] = useState<DTOTodo>(todo)
 
-    const btnstyle = { margin: '8px 0' }
     useEffect(() => {
         _setTodo(todo)
     }, [todo])
@@ -92,125 +91,7 @@ export default function TodoControl({ todo, setTodo, currentTime }: { currentTim
 
         {
             showModal &&
-
-            <div
-                onClick={(e) => { setShowModal(false); e.stopPropagation(); }}
-                style={{
-                    opacity: "100%",
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    zIndex: 5000,
-                }}>
-
-                <div
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        width: 'fit-content',
-                        height: 'fit-content',
-                        backgroundColor: 'white',
-                        borderRadius: 10,
-                        margin: 'auto',
-                        marginTop: 100,
-                        padding: 20,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        zIndex: 100,
-
-                    }}>
-                        <h3>Edit your Todo!</h3>
-                    <input
-                        onFocus={() => setTitleError(false)}
-                        onChange={(e) => _setTodo({
-                            ..._todo,
-                            title: e.target.value
-                        })}
-                        value={_todo.title}
-                        type="text" placeholder="Title"
-                        style={{
-                            fontSize: "1.2rem",
-                            border: !titleError ? '1px solid #bbb' : '1px solid red',
-                            borderRadius: 10,
-                            outline: 'none',
-                            padding: "12px 18px",
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            margin: "10px 20px",
-                        }}
-                    />
-
-                    <textarea
-                        onFocus={() => setContentError(false)}
-                        onChange={(e) => _setTodo({
-                            ..._todo,
-                            content: e.target.value
-                        })}
-                        value={_todo.content}
-                        placeholder="Description"
-                        style={{
-                            fontSize: "1.2rem",
-                            border: !contentError ? '1px solid #bbb' : '1px solid red',
-                            borderRadius: 10,
-                            outline: 'none',
-                            padding: "12px 18px",
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            margin: "10px 20px",
-                            height: 280,
-                        }}
-                    />
-                <ToastContainer />
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <DatePicker
-                            timeIntervals={5}
-                            showTimeSelect
-                            disabled={_todo.dueDate == null}
-                            selected={DateTime.fromISO(_todo?.dueDate?.toString() || new Date().toISOString()).toJSDate()}
-                            onChange={(date) => _setTodo({
-                                ..._todo,
-                                dueDate: DateTime.fromJSDate(date as Date)
-                            })}
-                            dateFormat="MM-dd-yyyy, HH:mm"
-                            timeFormat='HH:mm'
-                        />
-                        <input type="checkbox" style={{
-                            width: '1rem',
-                            height: '1rem',
-                        }} checked={_todo.dueDate !== null} onChange={(e) => {
-                            _setTodo({
-                                ..._todo, 
-                                dueDate: _todo.dueDate !== null ? null : DateTime.fromJSDate(new Date())
-                            })
-                        }} />
-                    </div>
-                    <Button
-                    type='submit'
-                    color='primary'
-                    variant="contained"
-                    style={btnstyle}
-                    onClick={() => {
-                        setTitleError(_todo.title.length < 1)
-                        setContentError(_todo.content.length < 1)
-                        if (_todo.title.length * _todo.content.length < 1) return;
-                        const newTodo = {
-                            ..._todo,
-                        }
-                        console.log(newTodo)
-                        updateTodoFetch(newTodo, setTodo,setShowModal)
-                    }}
-                    >Save</Button>
-                    Your task is {_todo.dueDate == null ? 'not' : ''} relevant
-                </div>
-            </div>
+            <TodoForm action='save!' submit={setTodo} initial={todo} showModal ={showModal} setShowModal={setShowModal} />
         }
 
     </>
