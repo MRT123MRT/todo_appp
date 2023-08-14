@@ -3,7 +3,7 @@ import SearchFilter from "../../models/SearchFilter"
 export default function AdvancedSearchOptions({ filter, setFilter }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void }) {
 
     return <div style={{
-      width: "90%",
+      width: "90%", // NO MORE INLINE CSS. IF I SEE ONE LINE OF INLINE CSS YOU ARE NOT PASSING THIS SHIT
       maxWidth: 800,
       display: 'flex',
       boxSizing: 'border-box',

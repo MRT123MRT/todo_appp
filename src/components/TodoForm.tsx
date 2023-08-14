@@ -25,6 +25,30 @@ export  default function TodoForm({ initial, submit, action,showModal, setShowMo
     const [titleError, setTitleError] = useState(false)
     const [contentError, setContentError] = useState(false)
     const btnstyle = { margin: '8px 0' }
+
+    const onClickSubmit = () => 
+        { // PUT ALL OF THIS IN FUNCTION 
+
+            setTitleError(todo.title.length < 1)
+            setContentError(todo.content.length < 1)
+
+            if (todo.title.length * todo.content.length < 1) return;
+
+            submit(todo);
+            setShowModal(false);
+            setTodo(
+                {
+                    title: "",
+                    content: "",
+                    completed: false,
+                    createdAt: new Date(),
+                    id: v4(),
+                    dueDate: DateTime.fromJSDate(new Date()),
+                } as DTOTodo // INCORRECT USAGE OF TYPES, AND ADDD FUNCTION FOR DEFAULT DTOTODO
+            )
+        }
+    
+
     return (
         <>
 
@@ -105,26 +129,7 @@ export  default function TodoForm({ initial, submit, action,showModal, setShowMo
                             color='primary'
                             variant="contained"
                             style={btnstyle}
-                            onClick={() => {
-
-                                setTitleError(todo.title.length < 1)
-                                setContentError(todo.content.length < 1)
-
-                                if (todo.title.length * todo.content.length < 1) return;
-
-                                submit(todo);
-                                setShowModal(false);
-                                setTodo(
-                                    {
-                                        title: "",
-                                        content: "",
-                                        completed: false,
-                                        createdAt: new Date(),
-                                        id: v4(),
-                                        dueDate: DateTime.fromJSDate(new Date()),
-                                    } as DTOTodo
-                                )
-                            }}
+                            onClick={onClickSubmit}
                         >{action}</Button>
                         Your task is {todo.dueDate == null ? 'not' : ''} relevant
                     </div>

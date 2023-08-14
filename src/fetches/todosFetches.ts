@@ -11,7 +11,7 @@ export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[
         window.location.href = '/login'
     }
 
-    fetch('http://localhost:5000/todo', { //MOVE ALL HTTP REQUESTS INTO DIFFRENT FILES
+    fetch('http://localhost:5000/todo', { 
         method: 'GET',
         credentials: 'include',
         headers: {
