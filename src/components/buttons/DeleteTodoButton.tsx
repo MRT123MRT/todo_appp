@@ -1,19 +1,13 @@
 import React from 'react';
+import '../../App.css'
+type DeleteButtonProps = {
+    deleteTodo: () => void,
+}
 
-
-function DeleteButton({ deleteTodo }: { deleteTodo: () => void, }) {
+const DeleteButton: React.FC<DeleteButtonProps> = ({ deleteTodo }) => {
 
     return (
-        <button
-            style={{
-                backgroundColor: '#00000000',
-                cursor: 'pointer',
-                color: 'white',
-                border: 'none',
-                borderRadius: 10,
-                padding: "0px",
-                margin: "0px 10px",
-            }}
+        <button className='DeleteButton'
             onClick={()=> deleteTodo()}>
             <img alt="add icon" src="/trash-2.svg" width={25} height={25} />
         </button>

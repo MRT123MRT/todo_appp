@@ -11,7 +11,13 @@ import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/m
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-export function AddTodoButton({ addTodo }: { addTodo: (todo: DTOTodo) => void }) {
+
+type AddTodoButtonType={
+    addTodo: (todo: DTOTodo) => void
+}
+
+
+export const AddTodoButton: React.FC<AddTodoButtonType> =({ addTodo })=> {
     const [showModal, setShowModal] = useState(false)
     const [todo, setTodo] = useState<DTOTodo>({
         title: "",

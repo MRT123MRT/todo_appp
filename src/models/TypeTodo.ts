@@ -8,36 +8,16 @@ type DTOTodo = {
     dueDate: DateTime | null;
     userid?: string;
 }
+
+export function HydrateDTOTodo(data: any): DTOTodo {
+    return {
+        title: data.title,
+        content: data.content,
+        completed: data.completed,
+        id: data.id,
+        dueDate: data.dueDate ? DateTime.fromISO(data.dueDate) : null,
+        userid: data.userid
+    }
+}
+
 export default DTOTodo;
-
-
-type DBTodo = {
-    todoid: string;
-    todotitle: string; //FRONT DOSNT NEED TO KNOW ABOUT DATABASE TYPES
-    tododescription: string;
-    todoisdone: boolean;
-    duedate: string | null;
-    userid?: string,
-}
-
-export const convertToDTOTodo = (dbTodo: DBTodo): DTOTodo => {
-
-    return {
-        title: dbTodo.todotitle,
-        content: dbTodo.tododescription,
-        completed: dbTodo.todoisdone,
-        id: dbTodo.todoid,
-        dueDate: dbTodo.duedate ? DateTime.fromISO(dbTodo.duedate) : null
-    }
-}
-
-export const convertToDBTodo = (dtoTodo: DTOTodo): DBTodo => { // THIS CONVERSION NEEDS TO ONLY HAPPEN IN BACKEND
-
-    return {
-        todoid: dtoTodo.id,
-        todotitle: dtoTodo.title,
-        tododescription: dtoTodo.content,
-        todoisdone: dtoTodo.completed,
-        duedate: dtoTodo.dueDate ? dtoTodo.dueDate.toISO() : null,
-    }
-}

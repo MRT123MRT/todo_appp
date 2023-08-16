@@ -4,36 +4,38 @@ import SearchFilter from "../../models/SearchFilter"
 import DTOTodo from "../../models/TypeTodo"
 import LogoutButton from "../../components/buttons/logoutButton"
 import cookie from 'react-cookies'
+import '../../App.css'
+
 const logout = () => {
   cookie.remove('token')
   window.location.href = "/login"
 }
-export default function SearchBar({ filter, setFilter, addTodo }: { filter: SearchFilter, setFilter: (filter: SearchFilter) => void, addTodo: (todo: DTOTodo) => void, }) {
+
+
+type SearchBarProps = {
+  filter: SearchFilter,
+  setFilter: (filter: SearchFilter) => void,
+  addTodo: (todo: DTOTodo) => void,
+}
+
+
+
+const SearchBar: React.FC<SearchBarProps> = ({ filter, setFilter, addTodo }) => {
 
   return <>
-    <div style={{
-      margin: '10px 0px',
-      width: "90%",
-      maxWidth: 800,
-      display: 'flex',
-    }}>
-      <button
+    <div className="search-bar">
+      <button className="buttnSearcBar"
         onClick={() => {
           setFilter({
             ...filter,
             filteringEnabled: !filter.filteringEnabled
           })
         }}
-        style={{
-          cursor: 'pointer',
-          border: '1px solid #ccc',
-          borderRadius: 10,
-          padding: "7px 14px",
-          marginRight: 10,
-        }}>
+  
+        >
         <img alt="add icon" src="/sliders.svg" width={25} height={25} />
       </button>
-      <input type="text" placeholder="Search..."
+      <input type="text" placeholder="Search..." className="inputSearchBar"
         onChange={(e) => {
           setFilter({
             ...filter,
@@ -42,15 +44,7 @@ export default function SearchBar({ filter, setFilter, addTodo }: { filter: Sear
         }
         }
         value={filter.generalSearch}
-        style={{
-          flex: 1,
-          minWidth: 40,
-          fontSize: "1.2rem",
-          border: '1px solid #bbb',
-          borderRadius: 10,
-          outline: 'none',
-          padding: "12px 18px",
-        }}
+
       />
       <AddTodoButton addTodo={addTodo} />
       <LogoutButton logout={logout}></LogoutButton>
@@ -62,3 +56,5 @@ export default function SearchBar({ filter, setFilter, addTodo }: { filter: Sear
   </>
 
 }
+
+export default SearchBar

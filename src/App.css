@@ -72,7 +72,6 @@
 }
 
 .addTodobtn {
-
   background-color: white;
   cursor: pointer;
   color: white;
@@ -80,6 +79,7 @@
   border-radius: 20%;
   padding: 8px 14px;
   margin-left: 10px;
+  margin-right: 10px;
   box-shadow: 0px 0px 5px #ccc;
 }
 
@@ -98,7 +98,7 @@
   width: fit-content;
   height: fit-content;
   background-color: white;
-  border-radius: 10%;
+  border-radius: 10px;
   margin: auto;
   margin-top: 100px;
   padding: 20px;
@@ -120,13 +120,156 @@
 }
 
 .contentarea {
-    font-size: 1.2rem;
-    border:  1px solid #bbb;
+  font-size: 1.2rem;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  outline: none;
+  padding: 12px 18px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 200px;
+  height: 280px;
+}
+
+.filter {
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.chosefilter {
+  display: flex;
+  background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  margin-right: 10px;
+}
+
+.selectfilter {
+  margin: 0px 0.3rem;
+  border: 0px solid #ccc;
+  border-radius: 5px;
+  padding: 0px 0px;
+  box-sizing: border-box;
+  width: auto;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  background-color: #eee;
+}
+
+
+.nothing-here {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.8rem;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.bg-red {
+  background-color: #FF6865;
+}
+
+.bg-green {
+  background-color: #90EE90;
+}
+
+.opacity-20 {
+  opacity: 20%;
+}
+
+.opacity-70 {
+  opacity: 70%;
+}
+
+.DeleteButton {
+  background-color: #00000000;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 10%;
+  padding: 0px;
+  margin: 0px 10px;
+}
+
+
+.LogoutButton {
+
+  background-color: white;
+  cursor: pointer;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-left: 10;
+  box-shadow: 0px 0px 5px #ccc;
+}
+
+.search-bar {
+  margin: 10px 0px;
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+}
+
+.buttnSearcBar {
+  cursor: pointer;
+    border: 1px solid #ccc;
     border-radius: 10px;
-    outline: none;
-    padding: 12px 18px;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 10px 200px;
-    height: 280px;
+    padding: 7px 14px;
+    margin-right: 10px;
+}
+.inputSearchBar {
+  flex: 1;
+  min-width: 40px;
+  font-size: 1.2rem;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  outline: none;
+  padding: 12px 18px;
+}
+
+.EditButton{
+  background-color: #00000000;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 10%;
+  padding: 0px;
+  margin: 0px 10px;
+}
+.pstyle{
+  white-space: pre-wrap;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+
+.checkbox{
+  width: 30px;
+  height: 30px;
+}
+.style{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tdffilter{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  flex: 1;
+  max-width: 800px;
+  height: 90%;
+  background-color: white;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  margin: 10px 0px;
 }

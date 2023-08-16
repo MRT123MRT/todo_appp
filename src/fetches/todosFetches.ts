@@ -1,17 +1,23 @@
 import { toast } from 'react-toastify';
 import cookie from 'react-cookies';
-import DTOTodo, { convertToDBTodo, convertToDTOTodo } from "../models/TypeTodo"
 import { DateTime } from 'luxon';
+import {BASEURL} from '../serverPath'
+import DTOTodo, { HydrateDTOTodo } from '../models/TypeTodo';
+const checktoken = ()=>
+{
+    if (cookie.load('token') === null || cookie.load('token') === undefined) { // PUT THIS IN A FUNCTION
+        window.location.href = '/login'
+    }
+}
+
 
 
 export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[]) => {
 
 
-    if (cookie.load('token') === null || cookie.load('token') === undefined) { // PUT THIS IN A FUNCTION
-        window.location.href = '/login'
-    }
+    checktoken();
 
-    fetch('http://localhost:5000/todo', { 
+    fetch(`${BASEURL}/todo`, { 
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -23,7 +29,7 @@ export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[
             toast("task get from server successfully");
             const json = await res.json();
             console.log(json)
-            setTodos(json.map((a: any) => convertToDTOTodo(a)))
+            setTodos((json as DTOTodo[]).map(HydrateDTOTodo))
 
         }
         else {
@@ -39,23 +45,24 @@ export const fetchTodos = (setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[
 }
 
 export const addTodoFetch = async (todo: DTOTodo, setTodos: (todos: DTOTodo[]) => void, todos: DTOTodo[]) => {
-    fetch('http://localhost:5000/todo/', {
+    // const BASEURL = 'http://localhost:5000' // SAVE THIS IN A DIFFRENT FILE, CALL THIS IN EVERY PLACE NECESARY
+    fetch(`${BASEURL}/todo/`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         "Access-Control-Allow-Origin": "*"
       },
       credentials: 'include',
-      body: JSON.stringify({ todo: convertToDBTodo(todo) })
+      body: JSON.stringify({ todo: todo })
 
     }).then(async res => {
 
       if (res.status >= 200 && res.status < 300) {
 
         const json = await res.json()
-        console.log(json, convertToDTOTodo(json))
+        console.log(json, json)
         toast("todo added")
-        setTodos([...todos, convertToDTOTodo(json)])
+        setTodos([...todos, HydrateDTOTodo(json)])
       }
       else {
         console.log(await res.json())
@@ -68,7 +75,7 @@ export const addTodoFetch = async (todo: DTOTodo, setTodos: (todos: DTOTodo[]) =
     })}
 export const deleteTodoFetch = async (todo: DTOTodo, setTodo: (todo: DTOTodo | null) => void) => {
 
-    fetch(`http://localhost:5000/todo/${todo.id}`, {
+    fetch(`${BASEURL}/todo/${todo.id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -106,19 +113,19 @@ export const updateTodoFetch = async (newTodo: {
     setShowModal: (showModal: boolean) => void
     
     ) => {
-        fetch(`http://localhost:5000/todo/${newTodo.id}`, {
+        fetch(`${BASEURL}/todo/${newTodo.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Origin": "*"
         },
         credentials: 'include',
-        body: JSON.stringify({ todo: convertToDBTodo(newTodo) })
+        body: JSON.stringify({ todo: HydrateDTOTodo(newTodo) })
 
     }).then(async res => {
         console.log(newTodo.id)
         if (res.status >= 200 && res.status < 350) {
-            setTodo(convertToDTOTodo(await res.json()))
+            setTodo(await res.json())
             setShowModal(false);
             toast('todo updated')
         }

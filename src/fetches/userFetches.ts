@@ -1,7 +1,19 @@
 import { toast } from 'react-toastify';
 import cookie from 'react-cookies';
+import {BASEURL} from '../serverPath'
 
 
+
+const saveToken =async (rememberMe: boolean,data:any) => {
+
+
+    cookie.save('token', data.token, { // FUNCTION IN A NOTHER PLACE
+        path: '/',
+        expires: rememberMe ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 365) : null
+
+    })
+
+}
 
 const ifAllFeildsAreFilled = (username: string, password: string) => {
 
@@ -46,7 +58,7 @@ export const loginFetch = async (username: string, password: string, rememberMe:
     }))
 
 
-    fetch('http://localhost:5000/auth/login', {
+    fetch(`${BASEURL}/auth/login`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -57,15 +69,13 @@ export const loginFetch = async (username: string, password: string, rememberMe:
             username,
             password
         })
-    }).then(async res => {
+    }).then(
+        
+        async res => {
 
         if (res.ok) {
             let data = await res.json()
-            cookie.save('token', data.token, { // FUNCTION IN A NOTHER PLACE
-                path: '/',
-                expires: rememberMe ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 365) : null
-
-            })
+            saveToken(rememberMe,data)
 
             toast("you are logged in");
             window.location.href = "/"
@@ -75,7 +85,8 @@ export const loginFetch = async (username: string, password: string, rememberMe:
         }
 
 
-    }).catch(err => {
+    }
+    ).catch(err => {
         console.log(err);
         toast("we have some problems with server");
 
@@ -91,7 +102,7 @@ export const registerFetch = async (username: string, password: string, email: s
         return;
 
 
-    fetch('http://localhost:5000/auth/register', {
+    fetch(`${BASEURL}/auth/register`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
